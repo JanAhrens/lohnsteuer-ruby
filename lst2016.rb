@@ -33,15 +33,15 @@ class LST2016
   def MPARA
     if @KRV < 2
       if @KRV == 0
-        @BBGRV = 74_400
+        @BBGRV = 74_400.0
       else
-        @BBGRV = 64_800
+        @BBGRV = 64_800.0
       end
       @RVSATZAN = 0.0935
       @TBSVORV = 0.64
     end
 
-    @BBGKVPV = 50_850
+    @BBGKVPV = 50_850.0
     @KVSATZAN = @KVZ / 100.0 + 0.07
     @KVSATZAG = 0.07
 
@@ -57,12 +57,12 @@ class LST2016
       @PVSATZAN = @PVSATZAN + 0.0025
     end
 
-    @W1STKL5 = 10_070
-    @W2STKL5 = 26_832
-    @W3STKL5 = 203_557
+    @W1STKL5 = 10_070.0
+    @W2STKL5 = 26_832.0
+    @W3STKL5 = 203_557.0
 
-    @GFB = 8652
-    @SOLZFREI = 972
+    @GFB = 8652.0
+    @SOLZFREI = 972.0
   end
 
   def MRE4JL
@@ -111,35 +111,34 @@ class LST2016
       if @LZZ == 1
         @VBEZB = @VBEZM * @ZMVB + @VBEZS
         @HFVB = @TAB2_J / 12.0 * @ZMVB
-        @FVBZ = @TAB3_J / 12.0 * @ZMVB
+        @FVBZ = (@TAB3_J / 12.0 * @ZMVB).ceil.to_f
       else
         @VBEZB = @VBEZM * 12 + @VBEZS
         @HFVB = @TAB2_J
         @FVBZ = @TAB3_J
       end
-
-      @FVB = @VBEZB * @TAB1_J / 100.0
+      @FVB = (@VBEZB * @TAB1_J).ceil / 100.0
       if @FVB > @HFVB
         @FVB = @HFVB
       end
       if @FVB > @ZVBEZJ
         @FVB = @ZVBEZJ
       end
-      @FVBSO = @FVB + @VBEZBSO * @TAB1_J / 100.0
+      @FVBSO = (@FVB + @VBEZBSO * @TAB1_J).ceil / 100.0
       if @FVBSO > @TAB2_J
         @FVBSO = @TAB2_J
       end
       @HFVBZSO = (@VBEZB + @VBEZBSO) / 100.0 - @FVBSO
-      @FVBZSO = @FVBZ + @VBEZBSO / 100.0
+      @FVBZSO = (@FVBZ + @VBEZBSO / 100.0).ceil.to_f
       if @FVBZSO > @HFVBZSO
-        @FBVZSO = @HFVBZSO
+        @FBVZSO = @HFVBZSO.ceil.to_f
       end
       if @FVBZSO > @TAB3_J
         @FVBZSO = @TAB3_J
       end
       @HFVBZ = @VBEZB / 100.0 - @FVB
       if @FVBZ > @HFVBZ
-        @FVBZ = @HFVBZ
+        @FVBZ = @HFVBZ.ceil.to_f
       end
     end
     self.MRE4ALTE
@@ -159,7 +158,7 @@ class LST2016
         end
       end
       @BMG = @ZRE4J - @ZVBEZJ
-      @ALTE = @BMG * @TAB4_K
+      @ALTE = (@BMG * @TAB4_K).ceil.to_f
       @HBALTE = @TAB5_K
       if @ALTE > @HBALTE
         @ALTE = @HBALTE
@@ -207,7 +206,7 @@ class LST2016
   def MSOLZ
     @SOLZFREI = @SOLZFREI * @KZTAB
     if @JBMG > @SOLZFREI
-      @SOLZJ = @JBMG * 5.5 / 100.0
+      @SOLZJ = (@JBMG * 5.5).floor / 100.0
       @SOLZMIN = (@JBMG - @SOLZFREI) * 20.0 / 100.0
       if @SOLZMIN < @SOLZJ
         @SOLZJ = @SOLZMIN
@@ -256,11 +255,11 @@ class LST2016
     if @LZZ == 1
       @ANTEIL1= @JW
     elsif @LZZ == 2
-      @ANTEIL1 = (@JW / 12.0).floor # Ergebnis abrunden
+      @ANTEIL1 = (@JW / 12.0).floor.to_f
     elsif @LZZ == 3
-      @ANTEIL1 = (@JW * 7.0 / 360).floor # Ergebnis abrunden
+      @ANTEIL1 = (@JW * 7.0 / 360).floor.to_f
     else
-      @ANTEIL1 = (@JW / 360.0).floor # Ergebnis abrunden
+      @ANTEIL1 = (@JW / 360.0).floor.to_f
     end
   end
 
@@ -274,7 +273,7 @@ class LST2016
     if @STKL < 6
       if @ZVBEZ > 0
         if @ZVBEZ - @FVBZ < 102
-          @ANP = @ZVBEZ - @FVBZ
+          @ANP = (@ZVBEZ - @FVBZ).ceil.to_f
         else
           @ANP = 102
         end
@@ -286,7 +285,7 @@ class LST2016
     if @STKL < 6
       if @ZRE4 > @ZVBEZ
         if @ZRE4 - @ZVBEZ < 1000
-          @ANP = @ANP + @ZRE4 - @ZVBEZ
+          @ANP = (@ANP + @ZRE4 - @ZVBEZ).ceil.to_f
         else
           @ANP = @ANP + 1000
         end
@@ -295,18 +294,18 @@ class LST2016
     @KZTAB = 1
     if @STKL == 1
       @SAP = 36
-      @KFB = @ZKF * 7248
+      @KFB = @ZKF * 7248.0
     elsif @STKL == 2
       @EFA = 1908
       @SAP = 36
-      @KFB = @ZKF * 7248
+      @KFB = @ZKF * 7248.0
     elsif @STKL == 3
       @KZTAB = 2
       @SAP = 36
-      @KFB = @ZKF * 7248
+      @KFB = @ZKF * 7248.0
     elsif @STKL == 4
       @SAP = 36
-      @KFB = @ZKF * 3624
+      @KFB = @ZKF * 3624.0
     elsif @STKL == 5
       @SAP = 36
       @KFB = 0
@@ -349,14 +348,14 @@ class LST2016
     end
     @VSP2 = 0.12 * @ZRE4VP
     if @STKL == 3
-      @VHB = 3000
+      @VHB = 3000.0
     else
-      @VHB = 1900
+      @VHB = 1900.0
     end
     if @VSP2 > @VHB
       @VSP2 = @VHB
     end
-    @VSPN = @VSP1 + @VSP2
+    @VSPN = (@VSP1 + @VSP2).ceil.to_f
     self.MVSP
     if @VSPN > @VSP
       @VSP = @VSPN
@@ -379,7 +378,7 @@ class LST2016
     else
       @VSP3 = @ZRE4VP * (@KVSATZAN + @PVSATZAN)
     end
-    @VSP = @VSP3 + @VSP1
+    @VSP = (@VSP3 + @VSP1).ceil.to_f
   end
 
   def UPMLST
@@ -387,7 +386,7 @@ class LST2016
       @ZVE = 0
       @X = 0
     else
-      @X = @ZVE / @KZTAB
+      @X = (@ZVE.to_f / @KZTAB.to_f).floor.to_f
     end
     if @STKL < 5
       self.UPTAB16
@@ -402,10 +401,10 @@ class LST2016
       @ZX = @W2STKL5
       self.UP5_6
       if @ZZX > @W3STKL5
-        @ST = @ST + (@W3STKL5 - @W2STKL5) * 0.42
-        @ST = @ST + (@ZZX - @W3STKL5) * 0.45
+        @ST = (@ST + (@W3STKL5 - @W2STKL5) * 0.42).floor.to_f
+        @ST = (@ST + (@ZZX - @W3STKL5) * 0.45).floor.to_f
       else
-        @ST = @ST + (@ZZX - @W2STKL5) * 0.42
+        @ST = (@ST + (@ZZX - @W2STKL5) * 0.42).floor.to_f
       end
     else
       @ZX = @ZZX
@@ -414,7 +413,7 @@ class LST2016
         @VERGL = @ST
         @ZX = @W1STKL5
         self.UP5_6
-        @HOCH = @ST + (@ZZX - @W1STKL5) * 0.42
+        @HOCH = (@ST + (@ZZX - @W1STKL5) * 0.42).floor.to_f
         if @HOCH < @VERGL
           @ST = @HOCH
         else
@@ -432,7 +431,7 @@ class LST2016
     self.UPTAB16
     @ST2 = @ST
     @DIFF = (@ST1 - @ST2) * 2
-    @MIST = @ZX * 0.14
+    @MIST = (@ZX * 0.14).floor.to_f
     if @MIST > @DIFF
       @ST = @MIST
     else
@@ -447,12 +446,12 @@ class LST2016
       if @X < 13_670
         @Y = (@X - @GFB) / 10_000
         @RW = @Y * 993.62
-        @RW = @RW + 1_400
+        @RW = @RW + 1_400.0
         @ST = @RW * @Y
       elsif @X < 53_666
-        @Y = (@X - 13_669) / 10_000
+        @Y = (@X - 13_669.0) / 10_000
         @RW = (@Y * 225.40)
-        @RW = @RW + 2_397
+        @RW = @RW + 2_397.0
         @RW = @RW * @Y
         @ST = @RW + 952.48
       elsif @X < 254_447
@@ -491,11 +490,11 @@ class LST2016
       self.UPVKV
       @VKVSONST = @VKV - @VKVSONST
       @LSTSO = @ST * 100.0
-      @STS = (@LSTSO - @LSTOSO) * @F
+      @STS = ((@LSTSO - @LSTOSO) * @F).floor.to_f
       if @STS < 0
         @STS = 0
       end
-      @SOLZS = @STS * 5.5 / 100.0
+      @SOLZS = (@STS * 5.5).floor / 100.0
       if @R > 0
         @BKS = @STS
       else
@@ -563,9 +562,9 @@ class LST2016
       if @STV < 0
         @STV = 0
       else
-        @STV = @STV * @F
+        @STV = (@STV * @F).floor.to_f
       end
-      @SOLZV = @STV * 5.5 / 100.0
+      @SOLZV = (@STV * 5.5).floor / 100.0
       if @R > 0
         @BKV = @STV
       else

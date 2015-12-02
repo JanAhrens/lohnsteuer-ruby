@@ -8,14 +8,14 @@ class Lohnsteuer2016
       LZZ: map_period(options[:period]) || 1,
       RE4: options[:salary] * 100 || 0,
       ZKF: options[:children] || 0,
-      PVZ: 1
+      PVZ: options[:no_nursing_care_insurance] ? 0 : 1
     }
 
-    raw_values = LST2016.new(input_values.merge(overrides)).LST2016.output
+    raw = LST2016.new(input_values.merge(overrides)).LST2016.output
 
     {
-      income_tax: ((raw_values[:LSTLZZ] + raw_values[:STS] + raw_values[:STV]) / 100.0).floor,
-      solidarity_surcharge: ((raw_values[:SOLZLZZ] + raw_values[:SOLZS] + raw_values[:SOLZV]) / 100.0).floor
+      income_tax: ((raw[:LSTLZZ] + raw[:STS] + raw[:STV]) / 100.0).floor,
+      solidarity_surcharge: ((raw[:SOLZLZZ] + raw[:SOLZS] + raw[:SOLZV]) / 100.0).floor
     }
   end
 
