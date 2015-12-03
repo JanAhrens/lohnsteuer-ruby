@@ -1,12 +1,10 @@
-# Source: https://www.bmf-steuerrechner.de/pruefdaten/pap2016.pdf
-class LST2016
+# Source: https://www.bmf-steuerrechner.de/pruefdaten/pap2015Dezember.pdf
+class Lst1215
   def initialize(params)
-    params.select do |k, v|
-      %i(AF AJAHR ALTER1 ENTSCH F JFREIB JHINZU JRE4 JRE4ENT JVBEZ
-         KRV KVZ LZZ LZZFREIB LZZHINZU PKPV PKV PVZ R RE4 SONSTB SONSTENT STERBE STKL
-         VBEZ VBEZM VBEZS VBS VJAHR VKAPA VMT ZKF ZMVB).include?(k)
-    end.each do |key, value|
-      instance_variable_set(:"@#{key}", value)
+    %i(AF AJAHR ALTER1 ENTSCH F JFREIB JHINZU JRE4 JRE4ENT JVBEZ
+       KRV KVZ LZZ LZZFREIB LZZHINZU PKPV PKV PVS PVZ R RE4 SONSTB SONSTENT STERBE STKL
+       VBEZ VBEZM VBEZS VBS VJAHR VKAPA VMT ZKF ZMVB).each do |key|
+      instance_variable_set(:"@#{key}", params[key] || 0)
     end
   end
 
@@ -16,32 +14,39 @@ class LST2016
     end.to_h
   end
 
-  def LST2016
+  def LST1215
     self.MPARA
     self.MRE4JL
     @VBEZBSO = 0
     @KENNVMT = 0
     self.MRE4
     self.MRE4ABZ
+    @ZRE4VPM = @ZRE4VP
+    @SCHLEIFZ = 1
     self.MBERECH
+    @SCHLEIFZ = 2
+    @W1STKL5 = 9_873
+    @ZRE4VP = @ZRE4VPM
+    self.MBERECH
+    self.MLST1215
     self.MSONST
     self.MVMT
 
-    self
+    output
   end
 
   def MPARA
     if @KRV < 2
       if @KRV == 0
-        @BBGRV = 74_400.0
+        @BBGRV = 72_600.0
       else
-        @BBGRV = 64_800.0
+        @BBGRV = 62_400.0
       end
       @RVSATZAN = 0.0935
-      @TBSVORV = 0.64
+      @TBSVORV = 0.60
     end
 
-    @BBGKVPV = 50_850.0
+    @BBGKVPV = 49_500.0
     @KVSATZAN = @KVZ / 100.0 + 0.07
     @KVSATZAG = 0.07
 
@@ -57,12 +62,9 @@ class LST2016
       @PVSATZAN = @PVSATZAN + 0.0025
     end
 
-    @W1STKL5 = 10_070.0
-    @W2STKL5 = 26_832.0
-    @W3STKL5 = 203_557.0
-
-    @GFB = 8652.0
-    @SOLZFREI = 972.0
+    @W1STKL5 = 9_763
+    @W2STKL5 = 26_441
+    @W3STKL5 = 200_584
   end
 
   def MRE4JL
@@ -121,9 +123,6 @@ class LST2016
       if @FVB > @HFVB
         @FVB = @HFVB
       end
-      if @FVB > @ZVBEZJ
-        @FVB = @ZVBEZJ
-      end
       @FVBSO = (@FVB + @VBEZBSO * @TAB1_J).ceil / 100.0
       if @FVBSO > @TAB2_J
         @FVBSO = @TAB2_J
@@ -150,12 +149,10 @@ class LST2016
     else
       if @AJAHR < 2006
         @K = 1
+      elsif @AJAHR < 2040
+        @K = @AJAHR - 2004
       else
-        if @AJAHR < 2040
-          @K = @AJAHR - 2004
-        else
-          @K = 36
-        end
+        @K = 36
       end
       @BMG = @ZRE4J - @ZVBEZJ
       @ALTE = (@BMG * @TAB4_K).ceil.to_f
@@ -182,13 +179,12 @@ class LST2016
   end
 
   def MBERECH
-    self.MZTABFB
-    @VFRB = (@ANP + @FVB + @FVBZ) * 100.0
-    self.MLSTJAHR
-    @WVFRB = (@ZVE - @GFB) * 100.0
-    if @WVFRB < 0
-      @WVFRB = 0
+    if @SCHLEIFZ == 1
+      self.MZTABFBA
+    else
+      self.MZTABFBN
     end
+    self.MLSTJAHR
     @LSTJAHR = @ST * @F
     self.UPLSTLZZ
     self.UPVKVLZZ
@@ -203,7 +199,7 @@ class LST2016
     self.MSOLZ
   end
 
-  def MZTABFB
+  def MZTABFBA
     @ANP = 0
     if @ZVBEZ >= 0
       if @ZVBEZ < @FVBZ
@@ -233,19 +229,71 @@ class LST2016
     end
     @KZTAB = 1
     if @STKL == 1
-      @SAP = 36
-      @KFB = @ZKF * 7248.0
+      @SAP = 36.0
+      @KFB = @ZKF * 7008.0
     elsif @STKL == 2
-      @EFA = 1908
-      @SAP = 36
-      @KFB = @ZKF * 7248.0
+      @EFA = 1308.0
+      @SAP = 36.0
+      @KFB = @ZKF * 7008.0
     elsif @STKL == 3
       @KZTAB = 2
       @SAP = 36
-      @KFB = @ZKF * 7248.0
+      @KFB = @ZKF * 7008.0
     elsif @STKL == 4
       @SAP = 36
-      @KFB = @ZKF * 3624.0
+      @KFB = @ZKF * 3504.0
+    elsif @STKL == 5
+      @SAP = 36
+      @KFB = 0
+    else
+      @KFB = 0
+    end
+    @ZTABFB = @EFA.to_f + @ANP.to_f + @SAP.to_f + @FVBZ.to_f
+  end
+
+  def MZTABFBN
+    @ANP = 0
+    if @ZVBEZ >= 0
+      if @ZVBEZ < @FVBZ
+        @FVBZ = @ZVBEZ
+      end
+    end
+    if @STKL < 6
+      if @ZVBEZ > 0
+        if @ZVBEZ - @FVBZ < 102
+          @ANP = (@ZVBEZ - @FVBZ).ceil
+        else
+          @ANP = 102
+        end
+      end
+    else
+      @FVBZ = 0
+      @FVBZSO = 0
+    end
+    if @STKL < 6
+      if @ZRE4 > @ZVBEZ
+        if @ZRE4 - @ZVBEZ < 1000
+          @ANP = @ANP + @ZRE4 - @ZVBEZ
+        else
+          @ANP = @ANP + 1000
+        end
+      end
+    end
+    @KZTAB = 1
+    if @STKL == 1
+      @SAP = 36
+      @KFB = @ZKF * 7152.0
+    elsif @STKL == 2
+      @EFA = 1908
+      @SAP = 36
+      @KFB = @ZKF * 7152.0
+    elsif @STKL == 3
+      @KZTAB = 2
+      @SAP = 36
+      @KFB = @ZKF * 7152.0
+    elsif @STKL == 4
+      @SAP = 36
+      @KFB = @ZKF * 3576.0
     elsif @STKL == 5
       @SAP = 36
       @KFB = 0
@@ -297,6 +345,11 @@ class LST2016
 
   def UPLSTLZZ
     @JW = @LSTJAHR * 100.0
+    if @SCHLEIFZ == 1
+      @JWLSTA = @JW
+    else
+      @JWLSTN = @JW
+    end
     self.UPANTEIL
     @LSTLZZ = @ANTEIL1
   end
@@ -309,7 +362,11 @@ class LST2016
       @X = (@ZVE.to_f / @KZTAB.to_f).floor.to_f
     end
     if @STKL < 5
-      self.UPTAB16
+      if @SCHLEIFZ == 1
+        self.UPTAB14
+      else
+        self.UPTAB15
+      end
     else
       self.MST5_6
     end
@@ -350,9 +407,9 @@ class LST2016
         @VSP3 = 0
       else
         @VSP3 = @PKPV * 12.0 / 100.0
-      end
-      if @PKV == 2
-        @VSP3 = @VSP3 - @ZRE4VP * (@KVSATZAG + @PVSATZAG)
+        if @PKV == 2
+          @VSP3 = @VSP3 - @ZRE4VP * (@KVSATZAG + @PVSATZAG)
+        end
       end
     else
       @VSP3 = @ZRE4VP * (@KVSATZAN + @PVSATZAN)
@@ -390,10 +447,18 @@ class LST2016
 
   def UP5_6
     @X = @ZX * 1.25
-    self.UPTAB16
+    if @SCHLEIFZ == 1
+      self.UPTAB14
+    else
+      self.UPTAB15
+    end
     @ST1 = @ST
     @X = @ZX * 0.75
-    self.UPTAB16
+    if @SCHLEIFZ == 1
+      self.UPTAB14
+    else
+      self.UPTAB15
+    end
     @ST2 = @ST
     @DIFF = (@ST1 - @ST2) * 2
     @MIST = (@ZX * 0.14).floor.to_f
@@ -405,7 +470,7 @@ class LST2016
   end
 
   def MSOLZ
-    @SOLZFREI = @SOLZFREI * @KZTAB
+    @SOLZFREI = 972.0 * @KZTAB
     if @JBMG > @SOLZFREI
       @SOLZJ = (@JBMG * 5.5).floor / 100.0
       @SOLZMIN = (@JBMG - @SOLZFREI) * 20.0 / 100.0
@@ -413,6 +478,11 @@ class LST2016
         @SOLZJ = @SOLZMIN
       end
       @JW = @SOLZJ * 100.0
+      if @SCHLEIFZ == 1
+        @JWSOLZA = @JW
+      else
+        @JWSOLZN = @JW
+      end
       self.UPANTEIL
       @SOLZLZZ = @ANTEIL1
     else
@@ -420,10 +490,41 @@ class LST2016
     end
     if @R > 0
       @JW = @JBMG * 100.0
+      if @SCHLEIFZ == 1
+        @JWBKA = @JW
+      else
+        @JWBKN = @JW
+      end
       self.UPANTEIL
       @BK = @ANTEIL1
     else
       @BK = 0
+    end
+  end
+
+  def MLST1215
+    if @LZZ > 1
+      @JW = @JWLSTN - 11 * (@JWLSTA - @JWLSTN)
+      if @JW < 0
+        @ANTEIL1 = 0
+      else
+        self.UPANTEIL
+      end
+      @LSTLZZ = @ANTEIL1
+      @JW = @JWSOLZN - 11 * (@JWSOLZA - @JWSOLZN)
+      if @JW < 0
+        @ANTEIL1 = 0
+      else
+        self.UPANTEIL
+      end
+      @SOLZLZZ = @ANTEIL1
+      @JW = @JWBKN.to_f - 11 * (@JWBKA.to_f - @JWBKN.to_f)
+      if @JW < 0
+        @ANTEIL1 = 0
+      else
+        self.UPANTEIL
+      end
+      @BK = @ANTEIL1
     end
   end
 
@@ -533,13 +634,8 @@ class LST2016
     self.MRE4
     self.MRE4ABZ
     @ZRE4VP = @ZRE4VP - @JRE4ENT / 100.0
-    self.MZTABFB
-    @VFRBS1 = (@ANP + @FVB + @FVBZ) * 100.0
+    self.MZTABFBN
     self.MLSTJAHR
-    @WVFRBO = (@ZVE - @GFB) * 100.0
-    if @WVFRBO < 0
-      @WVFRBO = 0
-    end
     @LSTOSO = @ST * 100
   end
 
@@ -549,29 +645,52 @@ class LST2016
     self.MRE4ABZ
     @ZRE4VP = @ZRE4VP - @JRE4ENT / 100.0 - @SONSTENT / 100.0
     @FVBZ = @FVBZSO
-    self.MZTABFB
-    @VFRBS2 = (@ANP + @FVB + @FVBZ) * 100.0 - @VFRBS1
+    self.MZTABFBN
   end
 
-  def UPTAB16
-    if @X < @GFB + 1
+  def UPTAB14
+    if @X < 8355
       @ST = 0
     else
-      if @X < 13_670
-        @Y = (@X - @GFB) / 10_000
-        @RW = @Y * 993.62
+      if @X < 13_470
+        @Y = (@X - 8354) / 10_000
+        @RW = @Y * 974.58
         @RW = @RW + 1_400.0
-        @ST = @RW * @Y
-      elsif @X < 53_666
-        @Y = (@X - 13_669.0) / 10_000
-        @RW = (@Y * 225.40)
+        @ST = (@RW * @Y).floor
+      elsif @X < 52_882
+        @Y = (@X - 13_469.0) / 10_000
+        @RW = (@Y * 228.74)
         @RW = @RW + 2_397.0
         @RW = @RW * @Y
-        @ST = @RW + 952.48
-      elsif @X < 254_447
-        @ST = @X * 0.42 - 8394.14
+        @ST = (@RW + 971.0).floor
+      elsif @X < 250_731
+        @ST = (@X * 0.42 - 8239.0).floor
       else
-        @ST = @X * 0.45 - 16_027.52
+        @ST = (@X * 0.45 - 15_761.0).floor
+      end
+      @ST = (@ST * @KZTAB).floor
+    end
+  end
+
+  def UPTAB15
+    if @X < 8473
+      @ST = 0
+    else
+      if @X < 13_470
+        @Y = (@X - 8472) / 10_000
+        @RW = @Y * 997.6
+        @RW = @RW + 1_400.0
+        @ST = (@RW * @Y).floor
+      elsif @X < 52_882
+        @Y = (@X - 13_469.0) / 10_000
+        @RW = @Y * 228.74
+        @RW = @RW + 2_397.0
+        @RW = @RW * @Y
+        @ST = (@RW + 948.68).floor
+      elsif @X < 250_731
+        @ST = (@X * 0.42 - 8261.29).floor
+      else
+        @ST = (@X * 0.45 - 15_783.19).floor
       end
       @ST = @ST * @KZTAB
     end
