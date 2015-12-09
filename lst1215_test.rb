@@ -4,6 +4,14 @@ require_relative 'lst1215'
 # Note: The test data was taken from page 40 and 41:
 # https://www.bmf-steuerrechner.de/pruefdaten/pap2015Dezember.pdf
 class Lst1215Test < Minitest::Test
+  def test_applies_to_december_2015
+    assert_equal true, Lst1215.applies?(Date.new(2015, 12, 7))
+  end
+
+  def test_doesnt_apply_to_november_2015
+    assert_equal false, Lst1215.applies?(Date.new(2015, 11, 30))
+  end
+
   def test_general_tax_class_1
     params = general_params.merge(RE4: 40_000 * 100, STKL: 1)
     res = Lst1215.new(params).LST1215

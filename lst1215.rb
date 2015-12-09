@@ -1,5 +1,11 @@
+require 'date'
+
 # Source: https://www.bmf-steuerrechner.de/pruefdaten/pap2015Dezember.pdf
 class Lst1215
+  def self.applies?(date)
+    (Date.new(2015, 12, 1) .. Date.new(2015, 12, 31)).include?(date)
+  end
+
   def initialize(params)
     %i(AF AJAHR ALTER1 ENTSCH F JFREIB JHINZU JRE4 JRE4ENT JVBEZ
        KRV KVZ LZZ LZZFREIB LZZHINZU PKPV PKV PVS PVZ R RE4 SONSTB SONSTENT STERBE STKL
