@@ -1,12 +1,15 @@
+require 'date'
 # Source: https://www.bmf-steuerrechner.de/pruefdaten/pap2016.pdf
-class LST2016
+class Lst2016
+  def self.applies?(date)
+    (Date.new(2016,  1, 1) .. Date.new(2016, 12, 31)).include?(date)
+  end
+
   def initialize(params)
-    params.select do |k, v|
-      %i(AF AJAHR ALTER1 ENTSCH F JFREIB JHINZU JRE4 JRE4ENT JVBEZ
-         KRV KVZ LZZ LZZFREIB LZZHINZU PKPV PKV PVZ R RE4 SONSTB SONSTENT STERBE STKL
-         VBEZ VBEZM VBEZS VBS VJAHR VKAPA VMT ZKF ZMVB).include?(k)
-    end.each do |key, value|
-      instance_variable_set(:"@#{key}", value)
+    %i(AF AJAHR ALTER1 ENTSCH F JFREIB JHINZU JRE4 JRE4ENT JVBEZ
+       KRV KVZ LZZ LZZFREIB LZZHINZU PKPV PKV PVS PVZ R RE4 SONSTB SONSTENT STERBE STKL
+       VBEZ VBEZM VBEZS VBS VJAHR VKAPA VMT ZKF ZMVB).each do |key|
+      instance_variable_set(:"@#{key}", params[key] || 0)
     end
   end
 
@@ -27,7 +30,7 @@ class LST2016
     self.MSONST
     self.MVMT
 
-    self
+    output
   end
 
   def MPARA
