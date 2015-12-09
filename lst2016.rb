@@ -564,17 +564,17 @@ class Lst2016
         @Y = (@X - @GFB) / 10_000
         @RW = @Y * 993.62
         @RW = @RW + 1_400.0
-        @ST = @RW * @Y
+        @ST = (@RW * @Y).floor
       elsif @X < 53_666
         @Y = (@X - 13_669.0) / 10_000
         @RW = (@Y * 225.40)
         @RW = @RW + 2_397.0
         @RW = @RW * @Y
-        @ST = @RW + 952.48
+        @ST = (@RW + 952.48).floor
       elsif @X < 254_447
-        @ST = @X * 0.42 - 8394.14
+        @ST = (@X * 0.42 - 8394.14).floor
       else
-        @ST = @X * 0.45 - 16_027.52
+        @ST = (@X * 0.45 - 16_027.52).floor
       end
       @ST = @ST * @KZTAB
     end
