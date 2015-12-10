@@ -9,6 +9,16 @@ Currently following implementations are supported:
 * Lst1215 (for December 2015)
 * Lst2016 (for 2016)
 
+## Usage
+
+```ruby
+require 'lohnsteuer'
+
+Lohnsteuer.calculate(2016, 40000, tax_class: 1)
+```
+
+## Contributing
+
 The algorithms where implemented by translating the program flowcharts
 published by the [Bundesministerium der Finananzen](https://www.bmf-steuerrechner.de/)
 into Ruby code.
