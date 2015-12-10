@@ -5,7 +5,7 @@ class Lst1215
     (Date.new(2015, 12, 1) .. Date.new(2015, 12, 31)).include?(date)
   end
 
-  def calculate(params)
+  def self.calculate(params)
     instance = new(params)
     instance.LST1215
     instance.output

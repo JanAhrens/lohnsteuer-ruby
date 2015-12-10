@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative 'lohnsteuer'
+require 'lohnsteuer'
 
 class LohnsteuerTest < Minitest::Test
   def test_calculate_month_throws_an_error_when_no_tax_algorithm_applies

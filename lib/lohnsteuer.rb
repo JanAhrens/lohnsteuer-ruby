@@ -1,9 +1,10 @@
 # coding: utf-8
 require 'date'
-require_relative 'lst1215'
-require_relative 'lst2016'
+require 'lohnsteuer/version'
+require 'lohnsteuer/lst1215'
+require 'lohnsteuer/lst2016'
 
-class Lohnsteuer
+module Lohnsteuer
   def self.tax_algorithms
     [Lst2016, Lst1215]
   end
