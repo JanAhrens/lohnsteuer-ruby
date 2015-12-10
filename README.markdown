@@ -1,9 +1,17 @@
-# Lohnsteuer 2016
+# Lohnsteuer
 
 This is a Ruby implementation of the german income tax calculation
-algorithm for 2016.
+algorithm.
 
-The implementation is based on the program flowchart published by the
-[Bundesministerium der Finananzen](https://www.bmf-steuerrechner.de/pruefdaten/pap2016.pdf).
+The algorithm gets updated every year (sometimes multiple times a year).
+Currently following implementations are supported:
 
-**State of the project**: Experimental. There're still tests failing.
+* Lst1215 (for December 2015)
+* Lst2016 (for 2016)
+
+The algorithms where implemented by translating the program flowcharts
+published by the [Bundesministerium der Finananzen](https://www.bmf-steuerrechner.de/)
+into Ruby code.
+The algorithms weren't modified on purpose to enable updates and verification.
+
+**State of the project**: Experimental. The interface needs to stabilize.
