@@ -1,8 +1,14 @@
 require 'date'
-# Source: https://www.bmf-steuerrechner.de/pruefdaten/pap2016.pdf
+
 class Lst2016
   def self.applies?(date)
     (Date.new(2016,  1, 1) .. Date.new(2016, 12, 31)).include?(date)
+  end
+
+  def self.calculate(params)
+    instance = new(params)
+    instance.LST2016
+    instance.output
   end
 
   def initialize(params)
@@ -19,6 +25,8 @@ class Lst2016
     end.to_h
   end
 
+  # ---------- BEGIN TAX ALGORITHM ----------
+  # Source: https://www.bmf-steuerrechner.de/pruefdaten/pap2016.pdf
   def LST2016
     self.MPARA
     self.MRE4JL
@@ -29,8 +37,6 @@ class Lst2016
     self.MBERECH
     self.MSONST
     self.MVMT
-
-    output
   end
 
   def MPARA
@@ -579,4 +585,5 @@ class Lst2016
       @ST = @ST * @KZTAB
     end
   end
+  # ---------- END TAX ALGORITHM ----------
 end
