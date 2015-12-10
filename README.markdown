@@ -15,3 +15,8 @@ into Ruby code.
 The algorithms weren't modified on purpose to enable updates and verification.
 
 **State of the project**: Experimental. The interface needs to stabilize.
+
+## Related projects
+
+* [vschoettke/node-lohnsteuer](https://github.com/vschoettke/lohnsteuer): Node.js implementation
+* [MarcelLehmann/Lohnsteuer](https://github.com/MarcelLehmann/Lohnsteuer): Java implementation
