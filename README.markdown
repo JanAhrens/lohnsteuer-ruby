@@ -26,7 +26,7 @@ published by the [Bundesministerium der Finanzen](https://www.bmf-steuerrechner.
 into Ruby code.
 The algorithms weren't modified on purpose to enable updates and verification.
 
-**State of the project**: Experimental. The interface needs to stabilize.
+**State of the project**: Initial release.
 
 ## Related projects
 
