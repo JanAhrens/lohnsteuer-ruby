@@ -4,7 +4,7 @@ require 'lohnsteuer/lst2016'
 
 # Note: The test data was taken from page 37 and 38:
 # https://www.bmf-steuerrechner.de/pruefdaten/pap2016.pdf
-class Lst2016Test < Minitest::Test
+class Lst2016Test < MiniTest::Unit::TestCase
   def test_applies_to_2016
     assert_equal true, Lst2016.applies?(Date.new(2016, 2, 1))
   end

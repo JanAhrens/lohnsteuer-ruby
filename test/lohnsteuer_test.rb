@@ -1,10 +1,10 @@
 require 'minitest/autorun'
 require 'lohnsteuer'
 
-class LohnsteuerTest < Minitest::Test
+class LohnsteuerTest < MiniTest::Unit::TestCase
   def test_calculate_month_throws_an_error_when_no_tax_algorithm_applies
-    assert_raises do
-      Lohnsteuer.calculate(1991, 12, 2000)
+    assert_raises(RuntimeError) do
+      Lohnsteuer.calculate_month(1991, 12, 2000)
     end
   end
 

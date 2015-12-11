@@ -3,7 +3,7 @@ require 'lohnsteuer/lst1215'
 
 # Note: The test data was taken from page 40 and 41:
 # https://www.bmf-steuerrechner.de/pruefdaten/pap2015Dezember.pdf
-class Lst1215Test < Minitest::Test
+class Lst1215Test < MiniTest::Unit::TestCase
   def test_applies_to_december_2015
     assert_equal true, Lst1215.applies?(Date.new(2015, 12, 7))
   end
