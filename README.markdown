@@ -1,5 +1,7 @@
 # Lohnsteuer
 
+[![Gem Version](https://badge.fury.io/rb/lohnsteuer.svg)](https://badge.fury.io/rb/lohnsteuer)
+
 This is a Ruby implementation of the german income tax calculation
 algorithm.
 
