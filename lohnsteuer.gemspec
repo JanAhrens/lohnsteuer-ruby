@@ -7,10 +7,10 @@ Gem::Specification.new do |spec|
   spec.name          = "lohnsteuer"
   spec.version       = Lohnsteuer::VERSION
   spec.authors       = ["Jan Ahrens"]
-  spec.email         = ["jan.ahrens+git@googlemail.com"]
+  spec.email         = ["jan.ahrens+rubygems@googlemail.com"]
   spec.summary       = %q{German tax calculation algorithm}
   spec.description   = ""
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/JanAhrens/lohnsteuer-ruby"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
