@@ -39,12 +39,24 @@ module Lohnsteuer
     algorithm = tax_algorithms.find { |c| c.applies?(Date.new(year, month, 1)) }
     fail "No tax algorithm found for #{month}/#{year}" unless algorithm
 
-    algorithm.calculate(params)
+    res = algorithm.calculate(params)
+
+    total_income_tax = (res[:LSTLZZ] || 0) + (res[:STS] || 0) + (res[:STV] || 0)
+    total_solidarity_tax = (res[:SOLZLZZ] || 0) + (res[:SOLZS] || 0) + (res[:SOLZV] || 0)
+
+    {
+      income_tax: total_income_tax / 100.0,
+      solidarity_tax: total_solidarity_tax / 100.0
+    }
   end
 
   def self.calculate(year, annual_salary, options = {})
     (1..12).map do |month|
       calculate_month(year, month, annual_salary / 12.0, options)
+    end.inject(income_tax: 0, solidarity_tax: 0) do |res, item|
+      res[:income_tax] = res[:income_tax] + item[:income_tax]
+      res[:solidarity_tax] = res[:solidarity_tax] + item[:solidarity_tax]
+      res
     end
   end
 end
