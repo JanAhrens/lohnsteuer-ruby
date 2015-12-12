@@ -20,9 +20,11 @@ class Lst1215
   end
 
   def output
-    %i(BK BKS BKV LSTLZZ SOLZLZZ SOLZS SOLZV STS STV VKVLZZ VKVSONST).map do |var|
-      [var, instance_variable_get(:"@#{var}").to_i]
-    end.to_h
+    Hash[
+      %i(BK BKS BKV LSTLZZ SOLZLZZ SOLZS SOLZV STS STV VKVLZZ VKVSONST).map do |var|
+        [var, instance_variable_get(:"@#{var}").to_i]
+      end
+    ]
   end
 
   # ---------- BEGIN TAX ALGORITHM ----------
