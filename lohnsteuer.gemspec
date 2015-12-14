@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Lohnsteuer::VERSION
   spec.authors       = ["Jan Ahrens"]
   spec.email         = ["jan.ahrens+rubygems@googlemail.com"]
-  spec.summary       = %q{German tax calculation algorithm}
+  spec.summary       = %q{German income tax calculation. Currently supports the official algorithms for 12/2015 and 2016.}
   spec.description   = ""
   spec.homepage      = "https://github.com/JanAhrens/lohnsteuer-ruby"
   spec.license       = "MIT"
